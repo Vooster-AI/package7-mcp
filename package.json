@@ -1,6 +1,6 @@
 {
   "name": "package7-mcp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Universal MCP server for accessing library documentation through LLM agents",
   "type": "module",
   "main": "dist/server.js",
