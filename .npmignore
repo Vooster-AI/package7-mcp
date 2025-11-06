@@ -1,0 +1,47 @@
+# Source files
+src/
+tsconfig.json
+vitest.config.ts
+
+# Tests
+**/__test__/
+**/*.test.ts
+coverage/
+
+# Config files
+.eslintrc
+eslint.config.js
+.prettierrc
+.prettierignore
+.npmrc
+pnpm-workspace.yaml
+
+# Documentation
+*.md
+!README.md
+
+# Version control
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Temp files
+*.tmp
+*.temp
+.DS_Store
+
+# CI/CD
+.github/
+.gitlab-ci.yml
