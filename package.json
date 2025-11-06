@@ -1,11 +1,11 @@
 {
-  "name": "tosspayments-integration-guide-mcp",
+  "name": "package7-mcp",
   "version": "1.0.0",
-  "description": "MCP-compatible toolset for integrating with tosspayments systems",
+  "description": "Universal MCP server for accessing library documentation through LLM agents",
   "type": "module",
   "main": "dist/server.js",
   "bin": {
-    "tosspayments-mcp": "./dist/server.js"
+    "package7-mcp": "./dist/server.js"
   },
   "scripts": {
     "build": "tsc",
@@ -22,8 +22,8 @@
   "keywords": [
     "mcp",
     "model-context-protocol",
-    "tosspayments",
-    "payment",
+    "documentation",
+    "library",
     "integration",
     "llm"
   ],

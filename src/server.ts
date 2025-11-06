@@ -11,15 +11,15 @@ import {
 
 
 const server = new McpServer({
-  name: "tosspayments-integration-guide",
+  name: "package7-mcp",
   description:
-    "MCP-compatible toolset for integrating with tosspayments systems. Includes tools for retrieving LLM-structured text and fetching actual documentation through URLs. (토스페이먼츠 시스템과의 연동을 위한 MCP 도구 모음입니다. LLM이 활용할 수 있는 텍스트 및 관련 문서를 가져오는 기능을 포함합니다.)",
+    "Universal MCP server for accessing library documentation. Enables LLM agents to retrieve documentation for any configured library and search through it using advanced text ranking. (다양한 라이브러리의 문서에 접근할 수 있는 범용 MCP 서버입니다. LLM Agent가 설정된 라이브러리의 문서를 검색하고 조회할 수 있게 합니다.)",
   version: "1.0.0",
 });
 
 server.tool(
   "get-v2-documents",
-  `토스페이먼츠 v2 문서들을 조회합니다. 명시적으로 유저가 버전에 관련된 질의가 없다면 사용해주세요.
+  `V2 documents를 조회합니다. 명시적으로 유저가 버전에 관련된 질의가 없다면 사용해주세요.
 ${BasePrompt}`,
   GetDocumentSchema,
   async (params) => {
@@ -29,7 +29,7 @@ ${BasePrompt}`,
 
 server.tool(
   "get-v1-documents",
-  `토스페이먼츠 v1 문서들을 조회합니다. 명시적으로 유저가 버전1을 질의하는 경우 사용해주세요.
+  `V1 documents를 조회합니다. 명시적으로 유저가 버전1을 질의하는 경우 사용해주세요.
 ${BasePromptForV1}`,
   GetDocumentSchema,
   async (params) => {

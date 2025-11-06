@@ -1,16 +1,16 @@
 import { CategoryWeightCalculator } from "../document/category-weight-calculator.js";
 import { MarkdownDocumentFetcher } from "../document/markdown-document.fetcher.js";
 import { parseLLMText } from "../document/parseLLMText.js";
-import { TossPaymentsDocumentLoader } from "../document/toss-payments-document.loader.js";
-import { TossPaymentDocsRepository } from "./toss-payment-docs.repository.js";
+import { DocumentLoader } from "../document/document.loader.js";
+import { DocsRepository } from "./docs.repository.js";
 import { SynonymDictionary } from "../document/synonym-dictionary.js";
 
-export async function createTossPaymentDocsRepository(
+export async function createDocsRepository(
   link = "https://docs.tosspayments.com/llms.txt"
-): Promise<TossPaymentDocsRepository> {
+): Promise<DocsRepository> {
   const response = await fetch(link, {
     headers: {
-      "user-agent": "TossPaymentsIntegrationGuide MCP",
+      "user-agent": "Package7MCP",
     },
   });
 
@@ -22,7 +22,7 @@ export async function createTossPaymentDocsRepository(
 
   const rawDocs = parseLLMText(llmText);
 
-  const loader = new TossPaymentsDocumentLoader(
+  const loader = new DocumentLoader(
     rawDocs,
     new MarkdownDocumentFetcher()
   );
@@ -31,7 +31,7 @@ export async function createTossPaymentDocsRepository(
 
   const documents = loader.getDocuments();
 
-  return new TossPaymentDocsRepository(
+  return new DocsRepository(
     documents,
     new CategoryWeightCalculator(),
     new SynonymDictionary()

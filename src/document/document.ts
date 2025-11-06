@@ -2,7 +2,7 @@ import { Category } from "../constants/category.js";
 import { ChunkConverter } from "./chunk-converter.js";
 import { DocumentChunk, RemoteMarkdownDocument } from "./types.js";
 
-export class TossPaymentsDocument {
+export class Document {
   private readonly chunks: DocumentChunk[] = [];
 
   constructor(

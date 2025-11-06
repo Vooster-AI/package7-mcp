@@ -1,6 +1,6 @@
 import { CATEGORY_WEIGHTS, Category } from "../constants/category.js";
-import { Result } from "./toss-payments-bm25-calculator.js";
-import { TossPaymentsDocument } from "./toss-payments-document.js";
+import { Result } from "./bm25-calculator.js";
+import { Document } from "./document.js";
 
 export class CategoryWeightCalculator {
   private readonly weights: Record<Category, number>;
@@ -12,7 +12,7 @@ export class CategoryWeightCalculator {
   /**
    * BM25 결과에 category별 가중치를 적용하고 재정렬
    */
-  apply(results: Result[], documents: TossPaymentsDocument[]): Result[] {
+  apply(results: Result[], documents: Document[]): Result[] {
     // 문서 ID별 빠른 조회를 위한 Map 생성
     const documentMap = this.createDocumentMap(documents);
 
@@ -59,9 +59,9 @@ export class CategoryWeightCalculator {
    * 문서 배열을 ID 기반 Map으로 변환 (성능 최적화)
    */
   private createDocumentMap(
-    documents: TossPaymentsDocument[]
-  ): Map<number, TossPaymentsDocument> {
-    const map = new Map<number, TossPaymentsDocument>();
+    documents: Document[]
+  ): Map<number, Document> {
+    const map = new Map<number, Document>();
     for (const doc of documents) {
       map.set(doc.id, doc);
     }

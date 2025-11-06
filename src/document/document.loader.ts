@@ -1,11 +1,11 @@
 import { MarkdownDocumentFetcher } from "./markdown-document.fetcher.js";
-import { TossPaymentsDocument } from "./toss-payments-document.js";
+import { Document } from "./document.js";
 import { RawDocs } from "./types.js";
 
-export class TossPaymentsDocumentLoader {
+export class DocumentLoader {
   private documentId: number = 0;
   private readonly links: string[] = [];
-  private readonly tossPaymentsDocuments: Map<string, TossPaymentsDocument> =
+  private readonly documents: Map<string, Document> =
     new Map();
 
   constructor(
@@ -23,21 +23,21 @@ export class TossPaymentsDocumentLoader {
     await this.collectAll();
   }
 
-  getDocuments(): TossPaymentsDocument[] {
-    return Array.from(this.tossPaymentsDocuments.values());
+  getDocuments(): Document[] {
+    return Array.from(this.documents.values());
   }
 
   private async collectAll() {
     await Promise.all(
       this.rawDocs.map(async (docs) => {
         try {
-          if (this.tossPaymentsDocuments.has(docs.link)) {
+          if (this.documents.has(docs.link)) {
             return;
           }
 
-          const tossPaymentDocument = await this.collect(docs);
+          const document = await this.collect(docs);
 
-          this.tossPaymentsDocuments.set(docs.link, tossPaymentDocument);
+          this.documents.set(docs.link, document);
         } catch (error) {
           console.error(`Failed to fetch document from ${docs.link}:`, error);
         }
@@ -56,13 +56,13 @@ export class TossPaymentsDocumentLoader {
       keywordSet.add(keyword);
     });
 
-    const tossPaymentDocument = new TossPaymentsDocument(
+    const newDocument = new Document(
       keywordSet,
       document,
       docs.version,
       this.documentId++,
       docs.category
     );
-    return tossPaymentDocument;
+    return newDocument;
   }
 }

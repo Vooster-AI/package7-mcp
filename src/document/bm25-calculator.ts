@@ -4,18 +4,18 @@ import {
   MIN_SCORE_RATIO,
   SearchMode,
 } from "../constants/search-mode.js";
-import { TossPaymentsDocument } from "./toss-payments-document.js";
+import { Document } from "./document.js";
 import { DocumentChunk } from "./types.js";
 
 type Score = { id: number; chunkId: number; score: number; totalTF: number };
 
-export class TossPaymentsBM25Calculator {
+export class BM25Calculator {
   private readonly allChunks: DocumentChunk[];
   private readonly totalCount: number;
   private readonly averageDocLength: number;
   private readonly N: number;
 
-  constructor(documents: TossPaymentsDocument[]) {
+  constructor(documents: Document[]) {
     this.allChunks = documents.flatMap((doc) => doc.getChunks());
     this.totalCount = this.allChunks.reduce(
       (count, doc) => count + doc.wordCount,

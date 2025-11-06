@@ -2,17 +2,17 @@ import { SearchMode } from "../constants/search-mode.js";
 import { CategoryWeightCalculator } from "../document/category-weight-calculator.js";
 import {
   Result,
-  TossPaymentsBM25Calculator,
-} from "../document/toss-payments-bm25-calculator.js";
-import { TossPaymentsDocument } from "../document/toss-payments-document.js";
+  BM25Calculator,
+} from "../document/bm25-calculator.js";
+import { Document } from "../document/document.js";
 
 import { SynonymDictionary } from "../document/synonym-dictionary.js";
 import { TokenEstimator } from "../document/token-estimator.js";
 import { DocumentChunk } from "../document/types.js";
 
-export class TossPaymentDocsRepository {
-  private readonly documentV1BM25Calculator: TossPaymentsBM25Calculator;
-  private readonly documentV2BM25Calculator: TossPaymentsBM25Calculator;
+export class DocsRepository {
+  private readonly documentV1BM25Calculator: BM25Calculator;
+  private readonly documentV2BM25Calculator: BM25Calculator;
 
   private readonly allV1Keywords: Set<string>;
   private readonly allV2Keywords: Set<string>;
@@ -21,7 +21,7 @@ export class TossPaymentDocsRepository {
     "\n\n... (내용이 더 있습니다...)";
 
   constructor(
-    private readonly documents: TossPaymentsDocument[],
+    private readonly documents: Document[],
     private readonly categoryWeightCalculator: CategoryWeightCalculator,
     private readonly synonymDictionary: SynonymDictionary
   ) {
@@ -33,8 +33,8 @@ export class TossPaymentDocsRepository {
       (document) => document.version === "v2"
     );
 
-    this.documentV1BM25Calculator = new TossPaymentsBM25Calculator(v1Documents);
-    this.documentV2BM25Calculator = new TossPaymentsBM25Calculator(v2Documents);
+    this.documentV1BM25Calculator = new BM25Calculator(v1Documents);
+    this.documentV2BM25Calculator = new BM25Calculator(v2Documents);
 
     this.allV2Keywords = new Set(v1Documents.map((doc) => doc.keywords).flat());
     this.allV1Keywords = new Set(v2Documents.map((doc) => doc.keywords).flat());
@@ -203,12 +203,12 @@ export class TossPaymentDocsRepository {
     const content = selectedChunks.map((chunk) => chunk.rawText).join("\n\n");
     const fullText =
       content +
-      (needsTruncation ? TossPaymentDocsRepository.TRUNCATION_WARNING : "");
+      (needsTruncation ? DocsRepository.TRUNCATION_WARNING : "");
 
     const finalTokens =
       usedTokens +
       (needsTruncation
-        ? TokenEstimator.estimate(TossPaymentDocsRepository.TRUNCATION_WARNING)
+        ? TokenEstimator.estimate(DocsRepository.TRUNCATION_WARNING)
         : 0);
 
     return {

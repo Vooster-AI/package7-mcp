@@ -1,13 +1,13 @@
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { isNativeError } from "node:util/types";
 
-import { createTossPaymentDocsRepository } from "../repository/createTossPaymentDocsRepository.js";
+import { createDocsRepository } from "../repository/createDocsRepository.js";
 import { GetDocumentParams } from "../schema/get-document-schema.js";
 
-export const repository = await createTossPaymentDocsRepository();
+export const repository = await createDocsRepository();
 
 /**
- * Toss Payment V1 문서 검색 도구
+ * V1 문서 검색 도구
  */
 export async function getV1DocumentsByKeyword(
   params: GetDocumentParams
@@ -38,7 +38,7 @@ export async function getV1DocumentsByKeyword(
 }
 
 /**
- * Toss Payment V2 문서 검색 도구
+ * V2 문서 검색 도구
  */
 export async function getV2DocumentsByKeyword(
   params: GetDocumentParams
