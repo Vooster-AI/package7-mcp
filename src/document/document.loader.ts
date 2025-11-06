@@ -9,10 +9,10 @@ export class DocumentLoader {
     new Map();
 
   constructor(
-    private readonly rawDocs: RawDocs[],
-    private readonly documentFetcher: MarkdownDocumentFetcher
+    private readonly _rawDocs: RawDocs[],
+    private readonly _documentFetcher: MarkdownDocumentFetcher
   ) {
-    this.rawDocs.forEach((doc) => {
+    this._rawDocs.forEach((doc) => {
       if (doc.link) {
         this.links.push(doc.link);
       }
@@ -29,7 +29,7 @@ export class DocumentLoader {
 
   private async collectAll() {
     await Promise.all(
-      this.rawDocs.map(async (docs) => {
+      this._rawDocs.map(async (docs) => {
         try {
           if (this.documents.has(docs.link)) {
             return;
@@ -46,7 +46,7 @@ export class DocumentLoader {
   }
 
   private async collect(docs: RawDocs) {
-    const document = await this.documentFetcher.fetch(docs.link);
+    const document = await this._documentFetcher.fetch(docs.link);
 
     const keywordSet = new Set<string>();
 

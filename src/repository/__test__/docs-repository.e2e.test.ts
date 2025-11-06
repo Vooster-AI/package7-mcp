@@ -3,23 +3,28 @@ import { describe, it } from "vitest";
 import { SearchMode } from "../../constants/search-mode.js";
 import { createDocsRepository } from "../createDocsRepository.js";
 
+// These are E2E tests that require real network access
+// They test the actual TossPayments documentation
 describe("docs", () => {
+  const TOSSPAYMENTS_ID = "tosspayments";
+  const TOSSPAYMENTS_URL = "https://docs.tosspayments.com/llms.txt";
+
   it("v1 문서의 keywords 를 가져온다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = repository.getAllV1Keywords();
 
     console.log(JSON.stringify(keywords));
   });
 
   it("v2 문서의 keywords 를 가져온다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = repository.getAllV2Keywords();
 
     console.log(JSON.stringify(keywords));
   });
 
   it("v1 docs 를 잘 가져온다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const text = await repository.findV1DocumentsByKeyword(
       ["결제위젯", "연동"],
       SearchMode.BALANCED,
@@ -31,7 +36,7 @@ describe("docs", () => {
   });
 
   it("v2 docs 를 잘 가져온다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const text = await repository.findV2DocumentsByKeyword(
       ["JavaScript", "SDK", "토스페이먼츠", "초기화", "결제위젯"],
       // ["결제위젯", "위젯", "메서드"],
@@ -44,7 +49,7 @@ describe("docs", () => {
   });
 
   it("offset과 limit으로 페이지네이션이 잘 동작한다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
 
     // 첫 번째 페이지
     const firstPage = await repository.findV2DocumentsByKeyword(
@@ -67,7 +72,7 @@ describe("docs", () => {
   });
 
   it("다양한 searchMode로 결과가 달라진다", async () => {
-    const repository = await createDocsRepository();
+    const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = ["가상계좌", "발급"];
 
     const broadResults = await repository.findV2DocumentsByKeyword(

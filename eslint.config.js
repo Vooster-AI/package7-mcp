@@ -19,6 +19,8 @@ export default [
         Buffer: "readonly",
         __dirname: "readonly",
         __filename: "readonly",
+        fetch: "readonly",
+        URL: "readonly",
       },
     },
     plugins: {
@@ -34,6 +36,24 @@ export default [
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-non-null-assertion": "warn",
       "no-console": ["warn", { allow: ["warn", "error"] }],
+    },
+  },
+  {
+    files: ["src/**/*.test.ts"],
+    languageOptions: {
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+        vi: "readonly",
+        global: "readonly",
+        setTimeout: "readonly",
+        setInterval: "readonly",
+      },
     },
   },
   {

@@ -5,35 +5,56 @@ import { DocumentLoader } from "../document/document.loader.js";
 import { DocsRepository } from "./docs.repository.js";
 import { SynonymDictionary } from "../document/synonym-dictionary.js";
 
+/**
+ * Creates a documentation repository for a specific library
+ *
+ * @param libraryId - Unique identifier for the library (used for logging/debugging)
+ * @param llmsTxtUrl - URL to the library's llms.txt file
+ * @returns Promise resolving to a configured DocsRepository instance
+ * @throws {Error} If llms.txt fetch fails or parsing errors occur
+ */
 export async function createDocsRepository(
-  link = "https://docs.tosspayments.com/llms.txt"
+  libraryId: string,
+  llmsTxtUrl: string
 ): Promise<DocsRepository> {
-  const response = await fetch(link, {
-    headers: {
-      "user-agent": "Package7MCP",
-    },
-  });
+  try {
+    const response = await fetch(llmsTxtUrl, {
+      headers: {
+        "user-agent": "Package7MCP",
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch LLM text: ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch llms.txt for library '${libraryId}': ${response.status} ${response.statusText}`
+      );
+    }
+
+    const llmText = await response.text();
+
+    const rawDocs = parseLLMText(llmText);
+
+    const loader = new DocumentLoader(
+      rawDocs,
+      new MarkdownDocumentFetcher()
+    );
+
+    await loader.load();
+
+    const documents = loader.getDocuments();
+
+    return new DocsRepository(
+      documents,
+      new CategoryWeightCalculator(),
+      new SynonymDictionary()
+    );
+  } catch (error) {
+    // Re-throw with library context
+    if (error instanceof Error) {
+      throw new Error(
+        `Failed to create repository for '${libraryId}': ${error.message}`
+      );
+    }
+    throw error;
   }
-
-  const llmText = await response.text();
-
-  const rawDocs = parseLLMText(llmText);
-
-  const loader = new DocumentLoader(
-    rawDocs,
-    new MarkdownDocumentFetcher()
-  );
-
-  await loader.load();
-
-  const documents = loader.getDocuments();
-
-  return new DocsRepository(
-    documents,
-    new CategoryWeightCalculator(),
-    new SynonymDictionary()
-  );
 }
