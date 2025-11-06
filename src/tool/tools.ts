@@ -129,7 +129,7 @@ export async function getDocuments(
       content: [
         {
           type: "text",
-          text: isNativeError(e) ? e.message : "오류가 발생하였습니다.",
+          text: isNativeError(e) ? e.message : "An error occurred.",
         },
       ],
       isError: true,
@@ -161,7 +161,7 @@ export async function getDocumentById(
     const numericId = parseInt(id, 10);
 
     if (isNaN(numericId)) {
-      throw new Error("유효하지 않은 문서 ID입니다.");
+      throw new Error("Invalid document ID.");
     }
 
     // Get repository for this library
@@ -171,7 +171,7 @@ export async function getDocumentById(
 
     if (!document) {
       throw new Error(
-        `문서를 찾을 수 없습니다. (Library: ${libraryId}, ID: ${id})`
+        `Document not found. (Library: ${libraryId}, ID: ${id})`
       );
     }
 
@@ -214,7 +214,7 @@ export async function getDocumentById(
       content: [
         {
           type: "text",
-          text: isNativeError(e) ? e.message : "오류가 발생하였습니다.",
+          text: isNativeError(e) ? e.message : "An error occurred.",
         },
       ],
       isError: true,

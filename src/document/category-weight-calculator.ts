@@ -10,10 +10,10 @@ export class CategoryWeightCalculator {
   }
 
   /**
-   * BM25 결과에 category별 가중치를 적용하고 재정렬
+   * Apply category-based weights to BM25 results and reorder
    */
   apply(results: Result[], documents: Document[]): Result[] {
-    // 문서 ID별 빠른 조회를 위한 Map 생성
+    // Create Map for fast lookup by document ID
     const documentMap = this.createDocumentMap(documents);
 
     return results
@@ -31,32 +31,32 @@ export class CategoryWeightCalculator {
           score: result.score * categoryWeight,
         };
       })
-      .sort((a, b) => b.score - a.score); // 가중치 적용 후 재정렬
+      .sort((a, b) => b.score - a.score); // Reorder after applying weights
   }
 
   /**
-   * 특정 category의 가중치 업데이트
+   * Update weight for specific category
    */
   updateWeight(category: Category, weight: number): void {
     this.weights[category] = weight;
   }
 
   /**
-   * 현재 가중치 설정 조회
+   * Get current weight settings
    */
   getWeights(): Readonly<Record<Category, number>> {
     return this.weights;
   }
 
   /**
-   * 특정 category의 가중치 조회
+   * Get weight for specific category
    */
   getWeight(category: Category): number {
     return this.weights[category];
   }
 
   /**
-   * 문서 배열을 ID 기반 Map으로 변환 (성능 최적화)
+   * Convert document array to ID-based Map (performance optimization)
    */
   private createDocumentMap(
     documents: Document[]

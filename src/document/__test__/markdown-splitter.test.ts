@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { MarkdownSplitter } from "../splitter/markdown-splitter.js";
 
 describe("MarkdownSplitter", () => {
-  it("정상적으로 파싱한다2", async () => {
+  it("parses correctly 2", async () => {
     const data = fs.readFileSync(
       path.join(__dirname, "data", "core-api.md"),
       "utf-8"
@@ -24,7 +24,7 @@ describe("MarkdownSplitter", () => {
     expect(parsed.enhancedChunks.length).toBeGreaterThan(0);
   });
 
-  it("정상적으로 파싱한다", async () => {
+  it("parses correctly", async () => {
     const data = fs.readFileSync(
       path.join(__dirname, "data", "test.md"),
       "utf-8"
@@ -52,7 +52,7 @@ describe("MarkdownSplitter", () => {
     expect(parsed.enhancedChunks.length).toBeGreaterThan(0);
   });
 
-  it("SDK 마크다운을 정상적으로 파싱한다", async () => {
+  it("parses SDK markdown correctly", async () => {
     const data = fs.readFileSync(
       path.join(__dirname, "data", "sdk.md"),
       "utf-8"

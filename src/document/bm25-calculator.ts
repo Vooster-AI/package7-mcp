@@ -48,7 +48,7 @@ export class BM25Calculator {
   }
 
   /**
-   * 최고 점수 대비 상대적 임계값을 적용하여 필터링
+   * Filter by applying relative threshold compared to the highest score
    */
   private applyRelativeFilter(
     scores: Score[],
@@ -64,15 +64,15 @@ export class BM25Calculator {
 
     const filtered = scores.filter((s) => s.score >= relativeThreshold);
 
-    // 최소 1개는 보장 (최고점수 문서는 항상 포함)
+    // Guarantee minimum 1 result (highest score document is always included)
     return filtered.length > 0 ? filtered : [scores[0]];
   }
 
   /**
-   * minScore 값을 상대적 비율로 매핑
+   * Map minScore value to relative ratio
    */
   private getThresholdRatio(minScore: number): number {
-    // minScore 0.1~1.0 -> 비율 0.05~0.7로 매핑
+    // Map minScore 0.1~1.0 -> ratio 0.05~0.7
     return Math.max(0.05, Math.min(0.7, minScore * 0.7));
   }
 
@@ -148,7 +148,7 @@ export class BM25Calculator {
   }
 
   private escapeRegExp(string: string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $&는 일치한 전체 문자열을 의미합니다.
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& represents the entire matched string
   }
 }
 

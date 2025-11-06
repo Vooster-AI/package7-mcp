@@ -17,7 +17,7 @@ export class Document {
       remoteMarkdownDocument.metadata,
       this.id
     );
-    // chunkId를 고유하게 재설정
+    // Reset chunkId to be unique
     convertedChunks.forEach((chunk, index) => {
       chunk.chunkId = this.id * 1000 + index;
       this.chunks.push(chunk);
@@ -25,8 +25,8 @@ export class Document {
   }
 
   /**
-   * 여러 chunkId들을 기반으로 최적화된 chunk 배열을 반환
-   * 연속적인 chunk들은 통합하고, window를 적용하여 중복을 제거
+   * Returns an optimized chunk array based on multiple chunkIds
+   * Consecutive chunks are merged, and window is applied to remove duplicates
    */
   findByChunkIds(
     chunkIds: number[],
@@ -36,7 +36,7 @@ export class Document {
 
     const { windowSize } = options;
 
-    // chunkId를 index로 변환 및 유효성 검증
+    // Convert chunkId to index and validate
     const validIndices = chunkIds
       .map((chunkId) => chunkId - this.id * 1000)
       .filter((index) => index >= 0 && index < this.chunks.length)
@@ -44,18 +44,18 @@ export class Document {
 
     if (validIndices.length === 0) return [];
 
-    // 중복 제거
+    // Remove duplicates
     const uniqueIndices = [...new Set(validIndices)];
 
     if (uniqueIndices.length === 1) {
-      // 단일 chunk인 경우 window 적용
+      // Apply window for single chunk
       const chunkIndex = uniqueIndices[0];
       const start = Math.max(0, chunkIndex - windowSize);
       const end = Math.min(this.chunks.length - 1, chunkIndex + windowSize);
       return this.chunks.slice(start, end + 1);
     }
 
-    // 연속성 분석을 위한 그룹 생성
+    // Create groups for analyzing consecutiveness
     const groups = this.groupConsecutiveIndices(uniqueIndices, windowSize);
 
     const result: DocumentChunk[] = [];
@@ -68,7 +68,7 @@ export class Document {
       result.push(...this.chunks.slice(start, end + 1));
     }
 
-    // 중복 제거 (chunkId 기준)
+    // Remove duplicates (based on chunkId)
     const uniqueChunks = new Map<number, DocumentChunk>();
     for (const chunk of result) {
       uniqueChunks.set(chunk.chunkId, chunk);
@@ -80,7 +80,7 @@ export class Document {
   }
 
   /**
-   * chunk 인덱스들을 연속성과 window 고려하여 그룹핑
+   * Group chunk indices considering consecutiveness and window size
    */
   private groupConsecutiveIndices(
     indices: number[],
@@ -95,13 +95,13 @@ export class Document {
       const prev = indices[i - 1];
       const current = indices[i];
 
-      // 현재 index가 이전 index와 연결 가능한지 확인
-      // window size를 고려해서 gap이 (windowSize * 2 + 1) 이하면 연결
+      // Check if current index can be connected with previous index
+      // Considering window size, connect if gap is (windowSize * 2 + 1) or less
       const maxGap = windowSize * 2 + 1;
       if (current - prev <= maxGap) {
         currentGroup.push(current);
       } else {
-        // 새로운 그룹 시작
+        // Start a new group
         groups.push(currentGroup);
         currentGroup = [current];
       }

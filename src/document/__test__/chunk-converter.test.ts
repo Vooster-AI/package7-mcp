@@ -17,7 +17,7 @@ describe("ChunkConverter", () => {
   };
 
   describe("convert", () => {
-    it("EnhancedChunk를 DocumentChunk로 변환한다", () => {
+    it("converts EnhancedChunk to DocumentChunk", () => {
       const result = ChunkConverter.convert(
         mockEnhancedChunk,
         mockMetadata,
@@ -36,7 +36,7 @@ describe("ChunkConverter", () => {
       expect(result.estimatedTokens).toBeGreaterThan(0);
     });
 
-    it("컨텍스트 프리픽스가 포함된 text를 생성한다", () => {
+    it("generates text with context prefix", () => {
       const result = ChunkConverter.convert(
         mockEnhancedChunk,
         mockMetadata,
@@ -55,7 +55,7 @@ describe("ChunkConverter", () => {
       `);
     });
 
-    it("headerStack과 keywords를 복사본으로 생성한다", () => {
+    it("creates copies of headerStack and keywords", () => {
       const result = ChunkConverter.convert(
         mockEnhancedChunk,
         mockMetadata,
@@ -63,16 +63,16 @@ describe("ChunkConverter", () => {
         0
       );
 
-      // 원본과 다른 객체여야 함
+      // Should be different objects from original
       expect(result.headerStack).not.toBe(mockEnhancedChunk.headerStack);
 
-      // 하지만 내용은 동일해야 함
+      // But contents should be the same
       expect(result.headerStack).toEqual(mockEnhancedChunk.headerStack);
     });
   });
 
   describe("convertAll", () => {
-    it("여러 EnhancedChunk를 DocumentChunk 배열로 변환한다", () => {
+    it("converts multiple EnhancedChunks to DocumentChunk array", () => {
       const chunks: EnhancedChunk[] = [
         mockEnhancedChunk,
         {
@@ -96,7 +96,7 @@ describe("ChunkConverter", () => {
   });
 
   describe("convertRaw", () => {
-    it("컨텍스트 없이 순수 내용만 포함된 DocumentChunk를 생성한다", () => {
+    it("creates DocumentChunk with pure content without context", () => {
       const result = ChunkConverter.convertRaw(
         mockEnhancedChunk,
         mockMetadata,
@@ -108,15 +108,15 @@ describe("ChunkConverter", () => {
       expect(result.rawText).toBe(mockEnhancedChunk.content);
       expect(result.estimatedTokens).toBe(mockEnhancedChunk.estimatedTokens);
 
-      // 컨텍스트 프리픽스가 포함되지 않아야 함
+      // Should not include context prefix
       expect(result.text).not.toContain("Document:");
       expect(result.text).not.toContain("Keywords:");
       expect(result.text).not.toContain("Header Path:");
     });
   });
 
-  describe("컨텍스트 프리픽스 생성", () => {
-    it("빈 headerStack을 처리한다", () => {
+  describe("Context prefix generation", () => {
+    it("handles empty headerStack", () => {
       const chunkWithoutHeaders: EnhancedChunk = {
         ...mockEnhancedChunk,
         headerStack: [],
@@ -139,7 +139,7 @@ describe("ChunkConverter", () => {
       `);
     });
 
-    it("빈 keywords를 처리한다", () => {
+    it("handles empty keywords", () => {
       const metadataWithoutKeywords: DocumentMetadata = {
         ...mockMetadata,
         keyword: [],
@@ -162,7 +162,7 @@ describe("ChunkConverter", () => {
       `);
     });
 
-    it("많은 키워드를 8개로 제한한다", () => {
+    it("limits many keywords to 8", () => {
       const metadataWithManyKeywords: DocumentMetadata = {
         ...mockMetadata,
         keyword: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -186,7 +186,7 @@ describe("ChunkConverter", () => {
       `);
     });
 
-    it("undefined나 빈 문자열 헤더를 필터링한다", () => {
+    it("filters undefined and empty string headers", () => {
       const chunkWithBadHeaders: EnhancedChunk = {
         ...mockEnhancedChunk,
         headerStack: ["결제 연동", "", "카드 결제", "   ", "인증 결제"],

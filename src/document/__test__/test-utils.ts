@@ -1,4 +1,5 @@
 import { RawDocs } from "../types.js";
+import { fetchWithHeaders } from "../../utils/fetch.js";
 
 /**
  * Validates that a RawDocs array is properly formatted
@@ -174,11 +175,7 @@ export async function validateLibrary(
 
   try {
     // Step 1: Fetch llms.txt
-    const response = await fetch(llmsTxtUrl, {
-      headers: {
-        "user-agent": "Package7MCP-Test",
-      },
-    });
+    const response = await fetchWithHeaders(llmsTxtUrl);
 
     const httpValidation = validateHttpResponse(response);
     if (!httpValidation.isValid) {

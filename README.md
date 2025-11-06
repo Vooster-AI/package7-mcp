@@ -7,8 +7,6 @@
 
 Universal MCP (Model Context Protocol) server for accessing and searching library documentation. Enables LLM agents to retrieve and analyze documentation for any configured library using advanced text ranking algorithms.
 
-다양한 라이브러리의 문서에 접근하고 검색할 수 있는 범용 MCP 서버입니다. LLM 에이전트가 설정된 라이브러리의 문서를 검색하고 분석할 수 있게 합니다.
-
 ## Features
 
 - **Multi-Library Support**: Access documentation for multiple configured libraries simultaneously

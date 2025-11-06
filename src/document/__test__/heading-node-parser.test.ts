@@ -14,8 +14,8 @@ describe("HeadingNodeParser", () => {
     };
   });
 
-  describe("기본 헤더 파싱", () => {
-    it("간단한 헤더를 파싱한다", () => {
+  describe("Basic header parsing", () => {
+    it("parses simple headers", () => {
       const node: HeadingNode = {
         type: "heading",
         depth: 1,
@@ -29,7 +29,7 @@ describe("HeadingNodeParser", () => {
       expect(context.headerStack).toEqual(["결제 연동"]);
     });
 
-    it("빈 헤더를 처리한다", () => {
+    it("handles empty headers", () => {
       const node: HeadingNode = {
         type: "heading",
         depth: 2,
@@ -44,9 +44,9 @@ describe("HeadingNodeParser", () => {
     });
   });
 
-  describe("헤더 스택 관리", () => {
-    it("계층적 헤더 구조를 올바르게 관리한다", () => {
-      // H1: 결제 연동
+  describe("Header stack management", () => {
+    it("manages hierarchical header structure correctly", () => {
+      // H1: Payment integration
       const h1: HeadingNode = {
         type: "heading",
         depth: 1,
@@ -55,7 +55,7 @@ describe("HeadingNodeParser", () => {
       parser.parse(h1, context);
       expect(context.headerStack).toEqual(["결제 연동"]);
 
-      // H2: 카드 결제
+      // H2: Card payment
       const h2: HeadingNode = {
         type: "heading",
         depth: 2,
@@ -64,7 +64,7 @@ describe("HeadingNodeParser", () => {
       parser.parse(h2, context);
       expect(context.headerStack).toEqual(["결제 연동", "카드 결제"]);
 
-      // H3: 인증 결제
+      // H3: Authenticated payment
       const h3: HeadingNode = {
         type: "heading",
         depth: 3,
@@ -78,11 +78,11 @@ describe("HeadingNodeParser", () => {
       ]);
     });
 
-    it("깊은 헤더에서 얕은 헤더로 이동 시 스택을 정리한다", () => {
-      // 초기 상태: H1 > H2 > H3
+    it("cleans stack when moving from deeper to shallower headers", () => {
+      // Initial state: H1 > H2 > H3
       context.headerStack = ["결제 연동", "카드 결제", "인증 결제"];
 
-      // 새로운 H2가 나타나면 H3는 제거되어야 함
+      // When new H2 appears, H3 should be removed
       const newH2: HeadingNode = {
         type: "heading",
         depth: 2,
@@ -93,11 +93,11 @@ describe("HeadingNodeParser", () => {
       expect(context.headerStack).toEqual(["결제 연동", "가상계좌 결제"]);
     });
 
-    it("H1에서 다른 H1으로 이동 시 스택을 리셋한다", () => {
-      // 초기 상태: 복잡한 헤더 구조
+    it("resets stack when moving from one H1 to another H1", () => {
+      // Initial state: complex header structure
       context.headerStack = ["결제 연동", "카드 결제", "인증 결제"];
 
-      // 새로운 H1
+      // New H1
       const newH1: HeadingNode = {
         type: "heading",
         depth: 1,
@@ -108,8 +108,8 @@ describe("HeadingNodeParser", () => {
       expect(context.headerStack).toEqual(["웹훅 연동"]);
     });
 
-    it("건너뛰는 헤더 레벨을 처리한다", () => {
-      // H1 > H3 (H2 건너뜀)
+    it("handles skipped header levels", () => {
+      // H1 > H3 (skipping H2)
       const h1: HeadingNode = {
         type: "heading",
         depth: 1,
@@ -124,7 +124,7 @@ describe("HeadingNodeParser", () => {
       };
       parser.parse(h3, context);
 
-      // H2 자리는 undefined, H3는 정상적으로 추가
+      // H2 position is undefined, H3 is added normally
       expect(context.headerStack).toEqual([
         "결제 연동",
         undefined,
@@ -133,8 +133,8 @@ describe("HeadingNodeParser", () => {
     });
   });
 
-  describe("headingDepth 제한", () => {
-    it("headingDepth보다 깊은 헤더는 finished가 false다", () => {
+  describe("headingDepth limit", () => {
+    it("headers deeper than headingDepth have finished as false", () => {
       context.headingDepth = 2;
 
       const h3: HeadingNode = {
@@ -146,10 +146,10 @@ describe("HeadingNodeParser", () => {
       const result = parser.parse(h3, context);
 
       expect(result.finished).toBe(false);
-      expect(context.headerStack).toEqual([]); // 스택에 추가되지 않음
+      expect(context.headerStack).toEqual([]); // Not added to stack
     });
 
-    it("headingDepth와 같거나 얕은 헤더는 finished가 true다", () => {
+    it("headers equal to or shallower than headingDepth have finished as true", () => {
       context.headingDepth = 3;
 
       const h2: HeadingNode = {
@@ -165,8 +165,8 @@ describe("HeadingNodeParser", () => {
     });
   });
 
-  describe("복잡한 헤더 텍스트", () => {
-    it("링크가 포함된 헤더를 처리한다", () => {
+  describe("Complex header text", () => {
+    it("handles headers with links", () => {
       const node: HeadingNode = {
         type: "heading",
         depth: 2,
@@ -187,7 +187,7 @@ describe("HeadingNodeParser", () => {
       expect(context.headerStack[1]).toBe("결제 API 가이드");
     });
 
-    it("인라인 코드가 포함된 헤더를 처리한다", () => {
+    it("handles headers with inline code", () => {
       const node: HeadingNode = {
         type: "heading",
         depth: 2,

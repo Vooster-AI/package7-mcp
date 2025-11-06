@@ -14,7 +14,7 @@ import {
 const server = new McpServer({
   name: "package7-mcp",
   description:
-    "Universal MCP server for accessing library documentation. Enables LLM agents to retrieve documentation for any configured library and search through it using advanced text ranking. (다양한 라이브러리의 문서에 접근할 수 있는 범용 MCP 서버입니다. LLM Agent가 설정된 라이브러리의 문서를 검색하고 조회할 수 있게 합니다.)",
+    "Universal MCP server for accessing library documentation. Enables LLM agents to retrieve documentation for any configured library and search through it using advanced text ranking.",
   version: "2.0.0",
 });
 

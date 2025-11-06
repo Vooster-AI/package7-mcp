@@ -9,21 +9,21 @@ describe("docs", () => {
   const TOSSPAYMENTS_ID = "tosspayments";
   const TOSSPAYMENTS_URL = "https://docs.tosspayments.com/llms.txt";
 
-  it("v1 문서의 keywords 를 가져온다", async () => {
+  it("retrieves keywords from v1 documents", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = repository.getAllV1Keywords();
 
     console.log(JSON.stringify(keywords));
   });
 
-  it("v2 문서의 keywords 를 가져온다", async () => {
+  it("retrieves keywords from v2 documents", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = repository.getAllV2Keywords();
 
     console.log(JSON.stringify(keywords));
   });
 
-  it("v1 docs 를 잘 가져온다", async () => {
+  it("retrieves v1 documents correctly", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const text = await repository.findV1DocumentsByKeyword(
       ["결제위젯", "연동"],
@@ -31,11 +31,11 @@ describe("docs", () => {
       25000
     );
 
-    console.log("V1 검색 결과:");
+    console.log("V1 Search results:");
     console.log(text);
   });
 
-  it("v2 docs 를 잘 가져온다", async () => {
+  it("retrieves v2 documents correctly", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const text = await repository.findV2DocumentsByKeyword(
       ["JavaScript", "SDK", "토스페이먼츠", "초기화", "결제위젯"],
@@ -44,34 +44,34 @@ describe("docs", () => {
       25000
     );
 
-    console.log("V2 검색 결과:");
+    console.log("V2 Search results:");
     console.log(text);
   });
 
-  it("offset과 limit으로 페이지네이션이 잘 동작한다", async () => {
+  it("pagination works correctly with offset and limit", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
 
-    // 첫 번째 페이지
+    // First page
     const firstPage = await repository.findV2DocumentsByKeyword(
       ["결제"],
       SearchMode.BALANCED,
       25000
     );
 
-    // 두 번째 페이지
+    // Second page
     const secondPage = await repository.findV2DocumentsByKeyword(
       ["결제"],
       SearchMode.BALANCED,
       25000
     );
 
-    console.log("첫 번째 페이지 (0-2):");
+    console.log("First page (0-2):");
     console.log(firstPage);
-    console.log("\n두 번째 페이지 (3-5):");
+    console.log("\nSecond page (3-5):");
     console.log(secondPage);
   });
 
-  it("다양한 searchMode로 결과가 달라진다", async () => {
+  it("results differ with various searchMode options", async () => {
     const repository = await createDocsRepository(TOSSPAYMENTS_ID, TOSSPAYMENTS_URL);
     const keywords = ["가상계좌", "발급"];
 
@@ -93,11 +93,11 @@ describe("docs", () => {
       25000
     );
 
-    console.log("BROAD 모드 결과:");
+    console.log("BROAD mode results:");
     console.log(broadResults);
-    console.log("\nBALANCED 모드 결과:");
+    console.log("\nBALANCED mode results:");
     console.log(balancedResults);
-    console.log("\nPRECISE 모드 결과:");
+    console.log("\nPRECISE mode results:");
     console.log(preciseResults);
   });
 });

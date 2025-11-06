@@ -11,7 +11,7 @@ export const DocumentByIdSchema = {
     .describe(
       `Library identifier. Available libraries: ${getLibraryIds().join(", ")}`
     ),
-  id: z.string().describe("문서별 id 값"),
+  id: z.string().describe("Document ID"),
 };
 
 /**

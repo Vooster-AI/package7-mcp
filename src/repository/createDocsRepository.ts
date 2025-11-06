@@ -4,6 +4,7 @@ import { parseLLMText } from "../document/parseLLMText.js";
 import { DocumentLoader } from "../document/document.loader.js";
 import { DocsRepository } from "./docs.repository.js";
 import { SynonymDictionary } from "../document/synonym-dictionary.js";
+import { fetchWithHeaders } from "../utils/fetch.js";
 
 /**
  * Creates a documentation repository for a specific library
@@ -18,11 +19,7 @@ export async function createDocsRepository(
   llmsTxtUrl: string
 ): Promise<DocsRepository> {
   try {
-    const response = await fetch(llmsTxtUrl, {
-      headers: {
-        "user-agent": "Package7MCP",
-      },
-    });
+    const response = await fetchWithHeaders(llmsTxtUrl);
 
     if (!response.ok) {
       throw new Error(

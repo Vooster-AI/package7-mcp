@@ -4,7 +4,7 @@ import * as fs from "node:fs";
 import path from "node:path";
 
 describe("parseLLMText", () => {
-  it("정상적으로 파싱한다", async () => {
+  it("parses correctly", async () => {
     const data = fs.readFileSync(
       path.join(__dirname, "data", "test_llms.txt"),
       "utf-8"

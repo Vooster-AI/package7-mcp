@@ -82,12 +82,12 @@ export type NodeParserContext = {
 };
 
 /**
- * 컨텍스트 정보가 포함된 향상된 chunk 구조
+ * Enhanced chunk structure with context information
  */
 export interface EnhancedChunk {
-  content: string; // 원본 컨텐츠
-  headerStack: string[]; // ["결제 연동", "카드 결제", "인증 결제"]
-  estimatedTokens: number; // 사전 계산된 토큰 수
+  content: string; // Original content
+  headerStack: string[]; // ["Payment Integration", "Card Payment", "Authentication Payment"]
+  estimatedTokens: number; // Pre-calculated token count
 }
 
 export interface NodeParser {

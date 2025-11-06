@@ -7,8 +7,8 @@ import {
 } from "../types.js";
 
 /**
- * 계층적 헤더 스택 관리를 지원하는 개선된 헤딩 노드 파서
- * 마크다운 헤딩의 계층구조를 정확히 추적하고 관리합니다.
+ * Enhanced heading node parser with support for hierarchical header stack management
+ * Accurately tracks and manages the hierarchy of markdown headings.
  */
 export class HeadingNodeParser implements NodeParser {
   supportType = "heading" as const;
@@ -20,7 +20,7 @@ export class HeadingNodeParser implements NodeParser {
     const finished = node.depth <= context.headingDepth;
 
     if (finished) {
-      // 계층구조를 고려한 헤더 스택 업데이트
+      // Update header stack considering hierarchy
       this.updateHeaderStack(context, node.depth, cleanHeaderText);
     }
 
@@ -28,9 +28,9 @@ export class HeadingNodeParser implements NodeParser {
   }
 
   /**
-   * 마크다운 형식 제거한 순수 헤더 텍스트 추출
-   * @param node 헤딩 노드
-   * @returns 클린한 헤더 텍스트
+   * Extract pure header text with markdown formatting removed
+   * @param node Heading node
+   * @returns Clean header text
    */
   private extractCleanHeaderText(node: HeadingNode): string {
     if (node.children && node.children.length > 0) {
@@ -40,10 +40,10 @@ export class HeadingNodeParser implements NodeParser {
   }
 
   /**
-   * 마크다운 형식으로 헤더 포맷팅
-   * @param node 헤딩 노드
-   * @param text 헤더 텍스트
-   * @returns 포맷된 마크다운 헤더
+   * Format header as markdown
+   * @param node Heading node
+   * @param text Header text
+   * @returns Formatted markdown header
    */
   private formatMarkdownHeader(node: HeadingNode, text: string): string {
     const headingPrefix = "#".repeat(node.depth);
@@ -51,28 +51,28 @@ export class HeadingNodeParser implements NodeParser {
   }
 
   /**
-   * 계층구조를 고려한 헤더 스택 업데이트
-   * 현재 depth보다 깊은 레벨의 헤더들을 제거하고 새 헤더 추가
-   * @param context 파서 컨텍스트
-   * @param depth 현재 헤더의 depth
-   * @param headerText 클린한 헤더 텍스트
+   * Update header stack considering hierarchy
+   * Remove headers deeper than current depth and add new header
+   * @param context Parser context
+   * @param depth Current header depth
+   * @param headerText Clean header text
    */
   private updateHeaderStack(
     context: NodeParserContext,
     depth: number,
     headerText: string
   ): void {
-    // 현재 depth보다 깊은 헤더들 제거
-    // 예: depth 2인 헤더가 나오면 depth 2, 3, 4... 의 기존 헤더들 모두 제거
+    // Remove headers deeper than current depth
+    // Example: If depth 2 header appears, remove all existing headers with depth 2, 3, 4...
     while (context.headerStack.length >= depth) {
       context.headerStack.pop();
     }
 
-    // 새 헤더를 적절한 위치에 추가
+    // Add new header at appropriate position
     // headerStack[0] = depth 1, headerStack[1] = depth 2, ...
     context.headerStack[depth - 1] = headerText;
 
-    // depth보다 뒤의 undefined 요소들 제거
+    // Remove undefined elements after depth
     context.headerStack.length = depth;
   }
 }

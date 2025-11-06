@@ -3,17 +3,17 @@ import { TokenEstimator } from "./token-estimator.js";
 import { DocumentChunk, DocumentMetadata } from "./types.js";
 
 /**
- * EnhancedChunk를 DocumentChunk로 변환하는 유틸리티
- * 컨텍스트 정보를 포함한 최종 chunk를 생성합니다.
+ * Utility to convert EnhancedChunk to DocumentChunk
+ * Creates final chunks with context information.
  */
 export class ChunkConverter {
   /**
-   * EnhancedChunk를 DocumentChunk로 변환합니다.
-   * @param enhancedChunk 변환할 EnhancedChunk
-   * @param metadata 문서 메타데이터
-   * @param documentId 문서 ID
-   * @param chunkIndex chunk 인덱스
-   * @returns 컨텍스트가 포함된 DocumentChunk
+   * Converts EnhancedChunk to DocumentChunk.
+   * @param enhancedChunk The EnhancedChunk to convert
+   * @param metadata Document metadata
+   * @param documentId Document ID
+   * @param chunkIndex Chunk index
+   * @returns DocumentChunk with context
    */
   static convert(
     enhancedChunk: EnhancedChunk,
@@ -21,16 +21,16 @@ export class ChunkConverter {
     documentId: number,
     chunkIndex: number
   ): DocumentChunk {
-    // 컨텍스트 프리픽스 생성
+    // Build context prefix
     const contextPrefix = this.buildContextPrefix(
       metadata,
       enhancedChunk.headerStack
     );
 
-    // 컨텍스트 포함 전체 텍스트
+    // Full text including context
     const fullText = contextPrefix + enhancedChunk.content;
 
-    // 컨텍스트 포함 토큰 수 계산
+    // Calculate token count including context
     const fullTokens = TokenEstimator.estimate(fullText);
 
     return {
@@ -41,16 +41,16 @@ export class ChunkConverter {
       rawText: enhancedChunk.content,
       wordCount: fullText.split(/\s+/).length,
       estimatedTokens: fullTokens,
-      headerStack: [...enhancedChunk.headerStack], // 복사본 생성
+      headerStack: [...enhancedChunk.headerStack], // Create a copy
     };
   }
 
   /**
-   * 여러 EnhancedChunk를 DocumentChunk 배열로 변환합니다.
-   * @param enhancedChunks 변환할 EnhancedChunk 배열
-   * @param metadata 문서 메타데이터
-   * @param documentId 문서 ID
-   * @returns DocumentChunk 배열
+   * Converts multiple EnhancedChunks to DocumentChunk array.
+   * @param enhancedChunks Array of EnhancedChunks to convert
+   * @param metadata Document metadata
+   * @param documentId Document ID
+   * @returns Array of DocumentChunks
    */
   static convertAll(
     enhancedChunks: EnhancedChunk[],
@@ -63,17 +63,17 @@ export class ChunkConverter {
   }
 
   /**
-   * 컨텍스트 프리픽스를 생성합니다.
-   * @param metadata 문서 메타데이터
-   * @param headerStack 헤더 경로
-   * @returns 컨텍스트 프리픽스 문자열
+   * Builds context prefix.
+   * @param metadata Document metadata
+   * @param headerStack Header path
+   * @returns Context prefix string
    */
   private static buildContextPrefix(
     metadata: DocumentMetadata,
     headerStack: string[]
   ): string {
     const headerPath = headerStack.filter((h) => h && h.trim()).join(" > ");
-    const keywordList = metadata.keyword.join(", "); // 문서 메타데이터의 키워드 사용
+    const keywordList = metadata.keyword.join(", "); // Use keywords from document metadata
 
     let contextPrefix = `## Metadata \n`;
 
@@ -91,13 +91,13 @@ export class ChunkConverter {
   }
 
   /**
-   * 컨텍스트 없이 순수 내용만 포함된 DocumentChunk를 생성합니다.
-   * (응답 생성 시 스마트 절단에서 사용)
-   * @param enhancedChunk 변환할 EnhancedChunk
-   * @param metadata 문서 메타데이터
-   * @param documentId 문서 ID
-   * @param chunkIndex chunk 인덱스
-   * @returns 순수 내용만 포함된 DocumentChunk
+   * Creates DocumentChunk with pure content without context.
+   * (Used in smart truncation during response generation)
+   * @param enhancedChunk The EnhancedChunk to convert
+   * @param metadata Document metadata
+   * @param documentId Document ID
+   * @param chunkIndex Chunk index
+   * @returns DocumentChunk with pure content only
    */
   static convertRaw(
     enhancedChunk: EnhancedChunk,

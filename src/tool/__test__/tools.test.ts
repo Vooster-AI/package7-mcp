@@ -253,7 +253,7 @@ describe("Tool Functions", () => {
       });
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain("오류가 발생하였습니다");
+      expect(result.content[0].text).toContain("An error occurred");
     });
 
     it("should handle empty search results", async () => {
@@ -347,7 +347,7 @@ describe("Tool Functions", () => {
       });
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain("유효하지 않은 문서 ID입니다");
+      expect(result.content[0].text).toContain("Invalid document ID");
     });
 
     it("should return error for empty string ID", async () => {
@@ -360,7 +360,7 @@ describe("Tool Functions", () => {
       });
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain("유효하지 않은 문서 ID입니다");
+      expect(result.content[0].text).toContain("Invalid document ID");
     });
 
     it("should return error when document not found", async () => {
@@ -376,7 +376,7 @@ describe("Tool Functions", () => {
       });
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain("문서를 찾을 수 없습니다");
+      expect(result.content[0].text).toContain("Document not found");
       expect(result.content[0].text).toContain("tosspayments");
       expect(result.content[0].text).toContain("999");
     });
@@ -446,7 +446,7 @@ describe("Tool Functions", () => {
       });
 
       expect(result.isError).toBe(true);
-      expect(result.content[0].text).toContain("오류가 발생하였습니다");
+      expect(result.content[0].text).toContain("An error occurred");
     });
 
     it("should handle document with single chunk", async () => {

@@ -1,58 +1,58 @@
-# Sub Agent 최종 구현 계획서
+# Final Sub Agent Implementation Plan
 
-> **기반**: agent-plan.md 원안 + agent-enhance-plan.md 비판 분석 결과 통합
+> **Base**: Original agent-plan.md + integrated analysis results from agent-enhance-plan.md
 >
-> **핵심 개선**: 파일 충돌 방지, 데이터 전달 명시화, 품질 검증 강화
+> **Key Improvements**: File conflict prevention, explicit data transfer, enhanced quality verification
 
 ---
 
-## 프로젝트 목표
+## Project Goal
 
-tosspayments 전용 MCP 서버를 범용 라이브러리 MCP 서버로 확장
+Expand the TossPayments-specific MCP server to a universal library MCP server
 
-### 필수 구현 사항 (docs/goal.md)
-1. `get-library-list` tool 추가
-2. `get-v1-documents` tool 제거
-3. `get-v2-documents` → `get-documents`로 변경 + libraryId 파라미터 추가
-4. `document-by-id`에 libraryId 파라미터 추가
-5. `createTossPaymentDocsRepository`를 모든 라이브러리에 대응하도록 범용화
+### Required Implementation Items (docs/goal.md)
+1. Add `get-library-list` tool
+2. Remove `get-v1-documents` tool
+3. Change `get-v2-documents` → `get-documents` + add libraryId parameter
+4. Add libraryId parameter to `document-by-id`
+5. Make `createTossPaymentDocsRepository` universal to support all libraries
 
-### 라이브러리 설정 구조
+### Library Configuration Structure
 ```typescript
 interface LibraryConfig {
-  id: string;           // 라이브러리 식별자
-  llmsTxtUrl: string;   // llms.txt 파일 URL
+  id: string;           // Library identifier
+  llmsTxtUrl: string;   // llms.txt file URL
 }
 ```
 
 ---
 
-## 실행 전략 요약
+## Execution Strategy Summary
 
-### 변경사항 (v1 → v2)
+### Changes (v1 → v2)
 
-| 항목 | v1 (원안) | v2 (최종) | 이유 |
+| Item | v1 (Original) | v2 (Final) | Reason |
 |-----|----------|----------|------|
-| Phase 구조 | 3 Phases | 6 Phases | 검증 단계 추가 |
-| Agent 수 | 7개 | 7개 | 동일 (역할 재배치) |
-| 실행 방식 | 병렬 + 순차 | 완전 순차 | 파일 충돌 방지 |
-| 데이터 전달 | 암묵적 | agent-outputs/ 시스템 | 명시적 전달 |
-| 설계 검증 | ❌ | Phase 1.5 추가 | 품질 보장 |
-| 구현 검증 | ❌ | Phase 4 추가 | 정확성 보장 |
-| Agent 6 모델 | Haiku | Sonnet | 테스트 품질 향상 |
-| 총 시간 | 13-23분 | 48-53분 | +25-40분 (안전성) |
-| 총 비용 | $17 | $30.50 | +$13.50 (재작업 방지) |
+| Phase Structure | 3 Phases | 6 Phases | Added verification stages |
+| Number of Agents | 7 | 7 | Same (roles redistributed) |
+| Execution Method | Parallel + Sequential | Completely Sequential | File conflict prevention |
+| Data Transfer | Implicit | agent-outputs/ system | Explicit transfer |
+| Design Verification | ❌ | Phase 1.5 added | Quality assurance |
+| Implementation Verification | ❌ | Phase 4 added | Correctness assurance |
+| Agent 6 Model | Haiku | Sonnet | Improved test quality |
+| Total Time | 13-23 min | 48-53 min | +25-40 min (safety) |
+| Total Cost | $17 | $30.50 | +$13.50 (prevent rework) |
 
-### 핵심 개선 원칙
+### Key Improvement Principles
 
-1. **안전성 우선**: 병렬 실행 최소화, 순차 실행으로 충돌 제거
-2. **명시적 전달**: agent-outputs/ 디렉토리를 통한 명확한 데이터 전달
-3. **품질 검증**: 설계/구현 검증 단계로 조기 오류 발견
-4. **실패 복구**: Git 체크포인트 + 재시도 로직으로 안전망 확보
+1. **Safety First**: Minimize parallel execution, eliminate conflicts with sequential execution
+2. **Explicit Transfer**: Clear data transfer through agent-outputs/ directory
+3. **Quality Verification**: Early error detection through design/implementation verification stages
+4. **Failure Recovery**: Safety net through Git checkpoints + retry logic
 
 ---
 
-## Phase 구조
+## Phase Structure
 
 ```mermaid
 graph TD
@@ -76,30 +76,30 @@ graph TD
 
 ## Phase 0: Preparation
 
-**실행자**: 메인 세션
-**예상 시간**: 1분
+**Executor**: Main session
+**Estimated Time**: 1 minute
 
-### 목적
-코드베이스 전체 분석 및 작업 환경 준비
+### Objective
+Analyze entire codebase and prepare work environment
 
-### 작업 순서
+### Work Steps
 
 ```bash
-# 1. 코드베이스 분석
+# 1. Analyze codebase
 npx repomix --ignore "./**/*.md"
 
-# 2. 산출물 디렉토리 생성
+# 2. Create output directory
 mkdir -p agent-outputs
 
-# 3. Git 체크포인트
+# 3. Git checkpoint
 git add .
 git commit -m "chore: pre-agent-execution checkpoint"
 ```
 
-### 결과물
-- ✅ `repomix-output.xml` (약 23,619 tokens)
-- ✅ `agent-outputs/` 디렉토리
-- ✅ Git 커밋 (롤백 포인트)
+### Deliverables
+- ✅ `repomix-output.xml` (approx. 23,619 tokens)
+- ✅ `agent-outputs/` directory
+- ✅ Git commit (rollback point)
 
 ---
 

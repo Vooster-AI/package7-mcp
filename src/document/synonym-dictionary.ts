@@ -1,5 +1,6 @@
 export class SynonymDictionary {
   private readonly dictionary: Record<string, string[]> = {
+    // Korean synonyms
     결제취소: ["결제 취소"],
     부분취소: ["부분 취소"],
     환불정책: ["환불", "정책", "규정"],
@@ -27,10 +28,32 @@ export class SynonymDictionary {
     "결제 위젯": ["결제위젯", "위젯"],
     메서드: ["method", "함수"],
     JavaScriptSDK: ["JavaScript SDK", "JavaScript", "SDK"],
+
+    // English synonyms (stored in lowercase)
+    payment: ["pay", "transaction", "checkout"],
+    cancel: ["cancellation", "refund", "void"],
+    "payment cancellation": ["cancel payment", "refund", "payment cancel"],
+    "partial cancellation": ["partial refund", "partial cancel"],
+    refund: ["refund policy", "return"],
+    settlement: ["payout", "disbursement"],
+    "virtual account": ["vaccount", "bank transfer", "wire transfer"],
+    installment: ["installments", "payment plan", "monthly payment"],
+    "interest-free": ["zero interest", "no interest", "0% interest"],
+    "interest-free installment": ["zero interest installment"],
+    card: ["credit card", "debit card", "card payment"],
+    authorization: ["auth", "approval", "authorize"],
+    authentication: ["verified payment", "3ds", "secure payment"],
+    widget: ["payment widget", "checkout widget"],
+    sdk: ["software development kit", "library", "javascript sdk"],
+    api: ["endpoint", "integration", "rest api"],
+    method: ["function", "api method"],
+    error: ["error code", "failure", "exception"],
+    integration: ["integrate", "implementation", "setup"],
   };
 
   getSynonyms(term: string): string[] {
-    return this.dictionary[term] || [];
+    const normalizedTerm = this.normalizeTerm(term);
+    return this.dictionary[normalizedTerm] || [];
   }
 
   convertToSynonyms(terms: string[]): string[] {
@@ -44,5 +67,18 @@ export class SynonymDictionary {
       }
     }
     return synonyms;
+  }
+
+  /**
+   * Normalize term for dictionary lookup.
+   * Korean terms are kept as-is, English terms are converted to lowercase.
+   */
+  private normalizeTerm(term: string): string {
+    // Keep Korean terms as-is
+    if (/[가-힣]/.test(term)) {
+      return term;
+    }
+    // Convert English terms to lowercase for case-insensitive matching
+    return term.toLowerCase().trim();
   }
 }

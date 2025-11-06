@@ -22,7 +22,7 @@ export class MarkdownTableBuilder {
   build(): string {
     if (this.table.length === 0) return "";
 
-    // 각 컬럼의 최대 너비 계산
+    // Calculate maximum width for each column
     const maxWidths: number[] = [];
 
     this.table.forEach((row) => {
@@ -40,7 +40,7 @@ export class MarkdownTableBuilder {
 
       formattedRows.push(`| ${paddedCells.join(" | ")} |`);
 
-      // 첫 번째 행 (헤더) 다음에 구분선 추가
+      // Add separator line after first row (header)
       if (rowIndex === 0) {
         const separators = maxWidths.map((width) => "-".repeat(width));
         formattedRows.push(

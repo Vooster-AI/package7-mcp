@@ -65,7 +65,7 @@ export class MarkdownSplitter {
         return;
       }
 
-      // tableBuilder 가 있지만 tableNode 가 아닌 경우
+      // If tableBuilder exists but current node is not a table node
       if (this.tableBuilder) {
         this.clearTableBuilder();
       }
@@ -85,7 +85,7 @@ export class MarkdownSplitter {
       this.append(value);
     });
 
-    // visit 완료 후 남은 테이블 처리
+    // Handle remaining table after visit is complete
     if (this.tableBuilder) {
       this.clearTableBuilder();
     }
@@ -100,7 +100,7 @@ export class MarkdownSplitter {
 
     return {
       markdown: this.markdown,
-      enhancedChunks: this.chunks, // 새로운 필드 추가
+      enhancedChunks: this.chunks, // New field added
       metadata: this.metadata,
       additionalMetadata: additionalMetadata?.content,
     };
@@ -148,10 +148,10 @@ export class MarkdownSplitter {
     const content = this.buffer.join(" ").trim();
     if (!content) return;
 
-    // 현재 헤더 스택 복사 (참조가 아닌 값 복사)
+    // Copy current header stack (value copy, not reference)
     const currentHeaderStack = [...this.context.headerStack];
 
-    // 토큰 수 사전 계산
+    // Pre-calculate estimated tokens
     const estimatedTokens = TokenEstimator.estimate(content);
 
     const enhancedChunk: EnhancedChunk = {
@@ -163,7 +163,7 @@ export class MarkdownSplitter {
     this.chunks.push(enhancedChunk);
     this.buffer.length = 0;
 
-    // 헤더 스택은 HeadingNodeParser에서 관리하므로 여기서는 pop하지 않음
+    // Header stack is managed by HeadingNodeParser, so don't pop here
   }
 }
 

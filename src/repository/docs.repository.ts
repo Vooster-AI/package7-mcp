@@ -18,7 +18,7 @@ export class DocsRepository {
   private readonly allV2Keywords: Set<string>;
 
   private static readonly TRUNCATION_WARNING =
-    "\n\n... (내용이 더 있습니다...)";
+    "\n\n... (there is more content...)";
 
   constructor(
     private readonly documents: Document[],
@@ -60,7 +60,7 @@ export class DocsRepository {
       searchMode
     );
 
-    // Category별 가중치 적용
+    // Apply weights by category
     const weightedResults = this.categoryWeightCalculator.apply(
       results,
       this.documents
@@ -81,7 +81,7 @@ export class DocsRepository {
       searchMode
     );
 
-    // Category별 가중치 적용
+    // Apply weights by category
     const weightedResults = this.categoryWeightCalculator.apply(
       results,
       this.documents
@@ -99,7 +99,7 @@ export class DocsRepository {
     const docs: string[] = [];
     let currentTokens = 0;
 
-    // 각 문서별로 chunk 조회
+    // Look up chunks for each document
     for (const [docId, chunkIds] of groupedByDocId.entries()) {
       const document = this.findOneById(docId);
 
@@ -114,7 +114,7 @@ export class DocsRepository {
         );
 
         if (processedChunk) {
-          const header = `# 원본문서 제목 : ${document.title}\n* 원본문서 ID : ${document.id}`;
+          const header = `# Original Document Title: ${document.title}\n* Original Document ID: ${document.id}`;
 
           const headerTokens = TokenEstimator.estimate(header);
 
@@ -135,7 +135,7 @@ export class DocsRepository {
   }
 
   /**
-   * Result 배열을 문서 ID별로 그룹핑
+   * Group Result array by document ID
    */
   private groupResultsByDocId(results: Result[]): Map<number, number[]> {
     const grouped = new Map<number, number[]>();
@@ -147,7 +147,7 @@ export class DocsRepository {
       grouped.get(result.id)!.push(result.chunkId);
     }
 
-    // 각 그룹의 chunkId를 중복 제거 및 정렬
+    // Remove duplicates and sort chunkIds for each group
     for (const [docId, chunkIds] of grouped.entries()) {
       grouped.set(
         docId,
@@ -159,10 +159,10 @@ export class DocsRepository {
   }
 
   /**
-   * 토큰 제한 하에서 chunks를 스마트하게 절단합니다.
-   * @param chunks 처리할 DocumentChunk 배열
-   * @param remainingTokens 남은 토큰 수
-   * @returns 처리된 텍스트와 사용된 토큰 수
+   * Smartly truncate chunks within token limit.
+   * @param chunks Array of DocumentChunks to process
+   * @param remainingTokens Number of remaining tokens
+   * @returns Processed text and number of tokens used
    */
   private smartTruncateChunks(
     chunks: DocumentChunk[],
@@ -176,7 +176,7 @@ export class DocsRepository {
     let selectedChunks: DocumentChunk[] = [];
     let usedTokens = 0;
 
-    // chunk별 토큰 수를 확인하면서 선택
+    // Select chunks while checking token count for each
     for (const chunk of chunks) {
       const chunkTokens = chunk.estimatedTokens;
 
@@ -185,7 +185,7 @@ export class DocsRepository {
         availableTokens -= chunkTokens;
         usedTokens += chunkTokens;
       } else {
-        // 부분 선택 가능한지 확인
+        // Check if partial selection is possible
         const partialChunk = this.tryPartialChunk(chunk, availableTokens);
         if (partialChunk) {
           selectedChunks.push(partialChunk.chunk);
@@ -218,18 +218,18 @@ export class DocsRepository {
   }
 
   /**
-   * 토큰 제한 하에서 chunk를 부분적으로 절단을 시도합니다.
-   * @param chunk 절단할 DocumentChunk
-   * @param availableTokens 사용 가능한 토큰 수
-   * @returns 부분 절단된 chunk와 토큰 수
+   * Attempt to partially truncate a chunk within token limit.
+   * @param chunk The DocumentChunk to truncate
+   * @param availableTokens Number of available tokens
+   * @returns Partially truncated chunk and token count
    */
   private tryPartialChunk(
     chunk: DocumentChunk,
     availableTokens: number
   ): { chunk: DocumentChunk; tokens: number } | null {
-    if (availableTokens < 100) return null; // 최소한의 토큰은 필요
+    if (availableTokens < 100) return null; // Minimum tokens required
 
-    // 의미 단위로 자르기 시도 (문장, 단락, 리스트 아이템 등)
+    // Attempt to cut at semantic boundaries (sentences, paragraphs, list items, etc.)
     const semanticBoundaries = this.findSemanticBoundaries(chunk.text);
 
     for (let i = semanticBoundaries.length - 1; i >= 0; i--) {
@@ -248,39 +248,39 @@ export class DocsRepository {
   }
 
   /**
-   * 텍스트에서 의미 있는 경계점들을 찾습니다.
-   * @param text 분석할 텍스트
-   * @returns 경계점 위치 배열 (문자 인덱스)
+   * Find semantic boundary points in text.
+   * @param text The text to analyze
+   * @returns Array of boundary positions (character indices)
    */
   private findSemanticBoundaries(text: string): number[] {
     const boundaries: number[] = [];
 
-    // 1. 문단 경계 (더블 개행)
+    // 1. Paragraph boundaries (double newline)
     let match;
     const paragraphRegex = /\n\n/g;
     while ((match = paragraphRegex.exec(text)) !== null) {
       boundaries.push(match.index);
     }
 
-    // 2. 문장 경계 (마침표, 느낌표, 물음표 + 공백)
+    // 2. Sentence boundaries (period, exclamation mark, question mark + space)
     const sentenceRegex = /[.!?]\s+/g;
     while ((match = sentenceRegex.exec(text)) !== null) {
       boundaries.push(match.index + match[0].length);
     }
 
-    // 3. 리스트 아이템 경계
+    // 3. List item boundaries
     const listRegex = /\n-\s+/g;
     while ((match = listRegex.exec(text)) !== null) {
       boundaries.push(match.index);
     }
 
-    // 4. 코드 블록 경계
+    // 4. Code block boundaries
     const codeBlockRegex = /```[\s\S]*?```/g;
     while ((match = codeBlockRegex.exec(text)) !== null) {
       boundaries.push(match.index + match[0].length);
     }
 
-    // 정렬 및 중복 제거
+    // Sort and remove duplicates
     return [...new Set(boundaries)].sort((a, b) => a - b);
   }
 }

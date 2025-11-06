@@ -1,60 +1,59 @@
-const PARAMETER = `## 파라미터 형식\n
+const PARAMETER = `## Parameter Format\n
 {\n
-  "keywords": string[]     // 질의에서 도출된 주요 키워드 (UTF-8 문자열 배열)\n
-  "searchMode": "broad" | "balanced" | "precise" // 검색 모드 (기본값: "balanced")\n
-  "maxTokens": number // 응답에 포함할 최대 토큰 수 (기본값: 25000, 최소: 500, 최대: 50000)\n
+  "keywords": string[]     // Main keywords derived from query (UTF-8 string array)\n
+  "searchMode": "broad" | "balanced" | "precise" // Search mode (default: "balanced")\n
+  "maxTokens": number // Maximum tokens to include in response (default: 25000, min: 500, max: 50000)\n
 }\n\n
-
-### 탐색 방법:\n
-허용하는 토큰의 범위는 500에서 50000 사이입니다.\n 
+### Exploration Method:\n
+The allowed token range is 500 to 50000.\n
 
 \n\n
-### searchMode 사용법:\n
-• broad: "결제 관련해서 뭐가 있는지 둘러보고 싶어"\n
-• balanced: "결제위젯 연동 방법을 알고 싶어"\n
-• precise: "정확히 이 에러코드가 뭘 의미하는지 알고 싶어"\n
+### searchMode Usage:\n
+• broad: "I want to explore what payment-related information is available"\n
+• balanced: "I want to know how to integrate the payment widget"\n
+• precise: "I want to know exactly what this error code means"\n
 \n\n`;
 
-export const BasePrompt = `유저의 질의를 분석하여 적절한 키워드와 카테고리를 추출 후 요청주세요.\n\n
+export const BasePrompt = `Analyze the user's query and extract appropriate keywords and categories before making a request.\n\n
 ${PARAMETER}
-## 예제 모음\n
+## Example Collection\n
 
 ### case 1\n
-User: 토스페이먼츠 결제위젯을 연동하고 싶어\n
-Assistant: { "keywords": ["결제위젯", "연동"] }\n\n
+User: I want to integrate Toss Payments payment widget\n
+Assistant: { "keywords": ["payment-widget", "integration"] }\n\n
 
 ### case 2\n
-User: 토스에서 카드 승인 실패는 어떤 케이스가 있나요?\n
-Assistant: { "keywords": ["카드", "승인", "실패"] }\n\n
+User: What are the cases for card approval failure at Toss?\n
+Assistant: { "keywords": ["card", "approval", "failure"] }\n\n
 
 ### case 3\n
-User: 비인증 결제가 뭐야?\n
-Assistant: { "keywords": ["비인증 결제"] }\n\n
+User: What is non-authenticated payment?\n
+Assistant: { "keywords": ["non-authenticated payment"] }\n\n
 
 ### case 4\n
-User: SDK로 어떻게 연동하죠?\n
-Assistant: { "keywords": ["sdk", "연동"] }\n\n
+User: How do I integrate using the SDK?\n
+Assistant: { "keywords": ["sdk", "integration"] }\n\n
 
 ### case 5\n
-User: 정책적으로 제한되는 부분이 있을까요?\n
-Assistant: { "keywords": ["정책", "제한"] }\n\n
+User: Are there any policy-restricted areas?\n
+Assistant: { "keywords": ["policy", "restriction"] }\n\n
 `;
 
-export const BasePromptForV1 = `명시적으로 유저가 버전1을 질의하는 경우 사용해주세요.\n\n
-유저의 질의를 분석하여 적절한 키워드를 추출 후 요청주세요. \n\n
+export const BasePromptForV1 = `Use this when the user explicitly queries for version 1.\n\n
+Analyze the user's query and extract appropriate keywords before making a request. \n\n
 ${PARAMETER}
 
-## 예제 모음
+## Example Collection
 
 ### case 1
-User: 토스페이먼츠 결제위젯을 버전1으로 연동하고 싶어
-Assistant: { "keywords": ["결제위젯", "연동"] }
+User: I want to integrate Toss Payments payment widget with version 1
+Assistant: { "keywords": ["payment-widget", "integration"] }
 
 ### case 2
-User: 토스페이먼츠 version1 sdk에서 오류가 나요
-Assistant: { "keywords": ["sdk", "오류"] }
+User: I'm getting an error with Toss Payments version 1 SDK
+Assistant: { "keywords": ["sdk", "error"] }
 
 ### case 3
-User: 결제창 v1 에서 카드 결제는 어떻게 하나요?
-Assistant: { "keywords": ["카드", "결제", "flow"] }
+User: How do I make a card payment with payment window v1?
+Assistant: { "keywords": ["card", "payment", "flow"] }
 `;

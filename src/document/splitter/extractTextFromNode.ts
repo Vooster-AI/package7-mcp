@@ -1,7 +1,7 @@
 import { BaseNode } from "./types.js";
 
 /**
- * 노드에서 텍스트 내용을 추출하는 함수
+ * Function to extract text content from a node
  */
 export function extractTextFromNode(node: BaseNode): string {
   if (isTextValue(node)) {

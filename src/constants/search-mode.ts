@@ -11,16 +11,16 @@ export type Bm25Config = {
 
 export const BM25_CONFIGS: Record<SearchMode, Bm25Config> = {
   broad: {
-    k1: 1.0, // 낮은 k1 = 용어 빈도에 덜 민감
-    b: 0.5, // 낮은 b = 문서 길이에 덜 민감
+    k1: 1.0, // Low k1 = less sensitive to term frequency
+    b: 0.5, // Low b = less sensitive to document length
   },
   balanced: {
-    k1: 1.2, // 표준 BM25 값
-    b: 0.75, // 표준 BM25 값
+    k1: 1.2, // Standard BM25 value
+    b: 0.75, // Standard BM25 value
   },
   precise: {
-    k1: 1.5, // 높은 k1 = 용어 빈도에 더 민감
-    b: 0.9, // 높은 b = 문서 길이에 더 민감
+    k1: 1.5, // High k1 = more sensitive to term frequency
+    b: 0.9, // High b = more sensitive to document length
   },
 };
 

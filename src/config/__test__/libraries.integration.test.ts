@@ -6,6 +6,7 @@ import {
   formatValidationResults,
   type LibraryValidationResult,
 } from "../../document/__test__/test-utils.js";
+import { fetchWithHeaders } from "../../utils/fetch.js";
 
 describe("Libraries Integration Test (E2E)", () => {
   // Increase timeout for real HTTP requests
@@ -17,11 +18,7 @@ describe("Libraries Integration Test (E2E)", () => {
       it(
         "should successfully fetch llms.txt",
         async () => {
-          const response = await fetch(llmsTxtUrl, {
-            headers: {
-              "user-agent": "Package7MCP-Test",
-            },
-          });
+          const response = await fetchWithHeaders(llmsTxtUrl);
 
           expect(response.ok).toBe(true);
           expect(response.status).toBe(200);
@@ -36,11 +33,7 @@ describe("Libraries Integration Test (E2E)", () => {
       it(
         "should successfully parse llms.txt content",
         async () => {
-          const response = await fetch(llmsTxtUrl, {
-            headers: {
-              "user-agent": "Package7MCP-Test",
-            },
-          });
+          const response = await fetchWithHeaders(llmsTxtUrl);
 
           expect(response.ok).toBe(true);
 

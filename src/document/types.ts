@@ -10,18 +10,18 @@ export interface DocumentMetadata {
 export interface MarkdownDocument {
   markdown: string;
   metadata: DocumentMetadata;
-  enhancedChunks: EnhancedChunk[]; // 새로운 필드 추가
+  enhancedChunks: EnhancedChunk[]; // New field added
 }
 
 export interface DocumentChunk {
   id: number;
   chunkId: number;
   originTitle: string;
-  text: string; // 컨텍스트 포함 전체 텍스트
-  rawText: string; // 원본 텍스트만
+  text: string; // Full text including context
+  rawText: string; // Original text only
   wordCount: number;
-  estimatedTokens: number; // 컨텍스트 포함 토큰 수
-  headerStack: string[]; // 헤더 경로
+  estimatedTokens: number; // Token count including context
+  headerStack: string[]; // Header path
 }
 
 export interface RemoteMarkdownDocument extends MarkdownDocument {
