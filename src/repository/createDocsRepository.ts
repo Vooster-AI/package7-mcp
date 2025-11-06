@@ -32,7 +32,7 @@ export async function createDocsRepository(
 
     const llmText = await response.text();
 
-    const rawDocs = parseLLMText(llmText);
+    const rawDocs = parseLLMText(llmText, libraryId, llmsTxtUrl);
 
     const loader = new DocumentLoader(
       rawDocs,
